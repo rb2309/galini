@@ -115,6 +115,16 @@ class BabAlgorithm(metaclass=abc.ABCMeta):
             self.logger.info('Branched at point {}', branching_point)
             for child in node_children:
                 solution = self.solve_problem(child.problem)
+                self.logger.info('Child {} has solution {}', child.coordinate, solution)
+                tree.update_node(child, solution)
+                self.logger.info('New tree state {}', tree.state)
+                var_view = child.problem.variable_view(child.variable)
+                self.logger.log_add_bab_node(
+                    coordinate=child.coordinate,
+                    lower_bound=solution.lower_bound,
+                    upper_bound=solution.upper_bound,
+                    branching_variables=[(child.variable.name, var_view.lower_bound(), var_view.upper_bound())],
+                )
                 group_name = '_'.join([str(c) for c in child.coordinate])
                 self.logger.tensor(
                     group=group_name,
@@ -132,17 +142,7 @@ class BabAlgorithm(metaclass=abc.ABCMeta):
                         dataset='solution',
                         data=np.array([v.value for v in solution.solution.variables]),
                     )
-                self.logger.info('Child {} has solution {}', child.coordinate, solution)
-                tree.update_node(child, solution)
-                self.logger.info('New tree state {}', tree.state)
-                var_view = child.problem.variable_view(child.variable)
-                self.logger.log_add_bab_node(
-                    coordinate=child.coordinate,
-                    lower_bound=solution.lower_bound,
-                    upper_bound=solution.upper_bound,
-                    branching_variables=[(child.variable.name, var_view.lower_bound(), var_view.upper_bound())],
-                )
-        return current_node.solution
+        return tree.best_solution.solution
 
     def solve_root_problem(self, problem):
         return self.solve_problem(problem)
