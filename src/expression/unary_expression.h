@@ -67,6 +67,11 @@ public:
   ADObject eval(values_ptr<ADObject>& values) const override {
     return -(*values)[child_];
   }
+
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override {
+    assert(children.size() == 1);
+    return std::make_shared<NegationExpression>(problem(), children);
+  }
 };
 
 

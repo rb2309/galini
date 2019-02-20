@@ -45,25 +45,24 @@ public:
 
   std::shared_ptr<Variable> variable(const std::string& name) const override;
   std::shared_ptr<Variable> variable(index_t idx) const override;
-  std::shared_ptr<Variable> add_variable(const std::string& name,
-					 py::object lower_bound, py::object upper_bound,
-					 py::object domain);
+  virtual std::shared_ptr<Variable> add_variable(const std::string& name,
+						 py::object lower_bound, py::object upper_bound,
+						 py::object domain);
 
   std::shared_ptr<Constraint> constraint(const std::string& name) const override;
   std::shared_ptr<Constraint> constraint(index_t idx) const override;
-  std::shared_ptr<Constraint> add_constraint(const std::string& name,
-					     const std::shared_ptr<Expression>& expr,
-					     py::object lower_bound,
-					     py::object upper_bound);
+  virtual std::shared_ptr<Constraint> add_constraint(const std::string& name,
+						     const std::shared_ptr<Expression>& expr,
+						     py::object lower_bound,
+						     py::object upper_bound);
 
   std::shared_ptr<Objective> objective(const std::string& name) const override;
   std::shared_ptr<Objective> objective(index_t idx) const override;
-  std::shared_ptr<Objective> add_objective(const std::string& name,
-					   const std::shared_ptr<Expression>& expr,
-					   py::object sense);
+  virtual std::shared_ptr<Objective> add_objective(const std::string& name,
+						   const std::shared_ptr<Expression>& expr,
+						   py::object sense);
 
   void insert_tree(const std::shared_ptr<Expression>& root_expr);
-  void insert_vertex(const std::shared_ptr<Expression>& expr);
 
   VariableView variable_view(const std::shared_ptr<Variable>& var) override;
   VariableView variable_view(const std::string& name) override;
@@ -91,8 +90,28 @@ public:
   std::string name() const override {
     return name_;
   }
-private:
 
+  virtual void duplicate_variables_from_problem(const std::shared_ptr<Problem>& other);
+
+protected:
+  void insert_vertex(const std::shared_ptr<Expression>& expr);
+
+  virtual std::shared_ptr<Variable> do_add_variable(const std::string& name,
+						    py::object lower_bound, py::object upper_bound,
+						    py::object domain);
+
+  virtual std::shared_ptr<Constraint> do_add_constraint(const std::string& name,
+							const std::shared_ptr<Expression>& expr,
+							py::object lower_bound,
+							py::object upper_bound);
+
+  virtual std::shared_ptr<Objective> do_add_objective(const std::string& name,
+						      const std::shared_ptr<Expression>& expr,
+						      py::object sense);
+
+  virtual std::vector<std::shared_ptr<Expression>> collect_vertices(const std::shared_ptr<Expression>& root_expr);
+
+private:
   std::string name_;
   std::vector<std::shared_ptr<Expression>> vertices_;
 

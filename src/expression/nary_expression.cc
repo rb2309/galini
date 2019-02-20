@@ -38,6 +38,11 @@ ADObject SumExpression::eval(values_ptr<ADObject>& values) const {
   return eval_sum(values);
 }
 
+std::shared_ptr<Expression> SumExpression::duplicate(const std::vector<typename Expression::ptr>& children) const {
+  assert(children.size() == num_children_);
+  return std::make_shared<SumExpression>(problem(), children);
+}
+
 
 LinearExpression::LinearExpression(const std::shared_ptr<Problem>& problem,
 				   const std::vector<typename Expression::ptr>& children,
@@ -89,6 +94,17 @@ ADFloat LinearExpression::eval(values_ptr<ADFloat>& values) const {
 
 ADObject LinearExpression::eval(values_ptr<ADObject>& values) const {
   return eval_linear(values);
+}
+
+std::shared_ptr<Expression> LinearExpression::duplicate(const std::vector<typename Expression::ptr>& children) const {
+  assert(children.size() == num_children_);
+  std::vector<double> coefficients(num_children_);
+  for (index_t i = 0; i < num_children_; ++i) {
+    auto child = children_[i];
+    auto coeff = coefficients_.at(child->uid());
+    coefficients[i] = coeff;
+  }
+  return std::make_shared<LinearExpression>(problem(), children, coefficients, constant_);
 }
 
 QuadraticExpression::QuadraticExpression(const std::shared_ptr<Problem>& problem,
@@ -175,6 +191,40 @@ ADFloat QuadraticExpression::eval(values_ptr<ADFloat>& values) const {
 
 ADObject QuadraticExpression::eval(values_ptr<ADObject>& values) const {
   return eval_quadratic(values);
+}
+
+std::shared_ptr<Expression> QuadraticExpression::duplicate(const std::vector<typename Expression::ptr>& children) const {
+  assert(children.size() == num_children_);
+  std::vector<Expression::ptr> vars1(num_children_);
+  std::vector<Expression::ptr> vars2(num_children_);
+  std::vector<double> coefficients(num_children_);
+
+  // Map var uid to position in children
+  std::unordered_map<index_t, index_t> uid_to_position;
+
+  for (index_t i = 0; i < num_children_; ++i) {
+    auto child = children_[i];
+    uid_to_position[child->uid()] = i;
+  }
+
+  index_t i = 0;
+  for (const auto& pair : terms_) {
+    auto term = pair.second;
+    assert(term.var1->idx() <= term.var2.idx());
+    auto pos1 = uid_to_position[term.var1->uid()];
+    auto pos2 = uid_to_position[term.var2->uid()];
+    auto new_var1 = children[pos1];
+    auto new_var2 = children[pos2];
+    assert(new_var1->idx() <= new_var2->idx());
+
+    vars1[i] = new_var1;
+    vars2[i] = new_var2;
+    coefficients[i] = term.coefficient;
+
+    i += 1;
+  }
+
+  return std::make_shared<QuadraticExpression>(problem(), vars1, vars2, coefficients);
 }
 
 } // namespace expression

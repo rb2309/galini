@@ -76,6 +76,9 @@ public:
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
 
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
+
+
 private:
   template<class T>
   T eval_sum(values_ptr<T>& values) const {
@@ -116,6 +119,8 @@ public:
 
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
+
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
 
 private:
   template<class T>
@@ -166,6 +171,8 @@ public:
 
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
+
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
 
 private:
   template<class T>

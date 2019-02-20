@@ -41,14 +41,14 @@ def test_insert_objective(problem):
 
 
 def test_constants_minimum_depth(problem):
-    problem.insert_vertex(Constant(1.234))
+    problem.insert_tree(Constant(1.234))
     assert problem.max_depth() == 2
 
 
 def test_vertex_index_is_updated(problem):
     cs = [Constant(i) for i in range(10)]
     for c in cs:
-        problem.insert_vertex(c)
+        problem.insert_tree(c)
     assert problem.max_depth() == 2
     assert problem.size == 10
     for i, c in enumerate(cs):
@@ -58,9 +58,9 @@ def test_vertex_index_is_updated(problem):
 def test_children_are_updated(problem):
     c0 = Constant(1.234)
     v0 = problem.add_variable('x', None, None, Domain.REAL)
-    problem.insert_vertex(c0)
+    problem.insert_tree(c0)
     s0 = SumExpression([c0, v0])
-    problem.insert_vertex(s0)
+    problem.insert_tree(s0)
     assert s0.idx == 2
     assert s0.nth_children(0) == c0
     assert s0.nth_children(1) == v0

@@ -14,6 +14,7 @@ limitations under the License.
 ======================================================================== */
 #pragma once
 
+#include <cassert>
 #include <memory>
 
 #include <pybind11/pybind11.h>
@@ -82,6 +83,11 @@ public:
   ADObject eval(values_ptr<ADObject>& values) const override {
     return (*values)[self()];
   }
+
+std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override {
+  assert(children.size() == 0);
+  return std::make_shared<Variable>(problem(), name_, lower_bound_, upper_bound_, domain_);
+}
 
 private:
   std::string name_;

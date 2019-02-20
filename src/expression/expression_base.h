@@ -119,6 +119,7 @@ public:
 
   virtual ptr nth_children(index_t n) const = 0;
   virtual std::vector<typename Expression::ptr> children() const = 0;
+  virtual std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const = 0;
 
   virtual ~Expression() = default;
 

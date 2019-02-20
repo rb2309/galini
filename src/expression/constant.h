@@ -62,6 +62,11 @@ public:
     return ADObject(value_);
   }
 
+std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override {
+  assert(children.size() == 0);
+  return std::make_shared<Constant>(problem(), value_);
+}
+
 private:
   double value_;
 };

@@ -77,7 +77,6 @@ void init_module(py::module& m) {
     .def("add_constraint", &RootProblem::add_constraint)
     .def("add_objective", &RootProblem::add_objective)
     .def("insert_tree", &RootProblem::insert_tree)
-    .def("insert_vertex", &RootProblem::insert_vertex)
     .def("make_child", &RootProblem::make_child)
     .def("make_relaxed", &RootProblem::make_relaxed);
 

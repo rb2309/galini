@@ -35,6 +35,18 @@ ADObject PowExpression::eval(values_ptr<ADObject>& values) const {
   return ad::pow((*values)[first_], (*values)[second_]);
 }
 
+
+#define BINARY_EXPRESSION_DUPLICATE_IMPL(class) \
+  std::shared_ptr<Expression>						\
+  class::duplicate(const std::vector<typename Expression::ptr>& children) const \
+  { assert(children.size() == 2); return std::make_shared<class>(problem(), children); }
+
+BINARY_EXPRESSION_DUPLICATE_IMPL(ProductExpression)
+BINARY_EXPRESSION_DUPLICATE_IMPL(DivisionExpression)
+BINARY_EXPRESSION_DUPLICATE_IMPL(PowExpression)
+
+#undef BINARY_EXPRESSION_DUPLICATE_IMPL
+
 } // namespace expression
 
 } // namespace galini

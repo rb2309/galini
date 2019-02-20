@@ -65,6 +65,10 @@ public:
 		    const std::shared_ptr<Reference>& reference);
 
   std::shared_ptr<Reference> reference() const { return reference_; }
+
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override {
+    throw std::runtime_error("Not Implemented.");
+  }
 private:
   std::shared_ptr<Reference> reference_;
 };

@@ -70,6 +70,8 @@ public:
     return (*values)[first_] * (*values)[second_];
   }
 
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
+
 };
 
 class DivisionExpression : public BinaryExpression {
@@ -86,6 +88,8 @@ public:
     return (*values)[first_] / (*values)[second_];
   }
 
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
+
 };
 
 class PowExpression : public BinaryExpression {
@@ -96,6 +100,8 @@ public:
 
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
+
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
 
 };
 

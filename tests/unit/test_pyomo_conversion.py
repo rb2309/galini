@@ -317,6 +317,7 @@ class TestConvertObjective(object):
         assert isinstance(obj.root_expr, core.LinearExpression)
         assert obj.sense == core.Sense.MINIMIZE
 
+    @pytest.mark.skip('For now we convert to min')
     def test_max(self):
         m = aml.ConcreteModel()
         m.I = range(10)

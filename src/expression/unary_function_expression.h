@@ -36,6 +36,8 @@ public:
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
 
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
+
 };
 
 class SqrtExpression : public UnaryFunctionExpression {
@@ -46,6 +48,8 @@ public:
 
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
+
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
 
 };
 
@@ -58,6 +62,8 @@ public:
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
 
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
+
 };
 
 class LogExpression : public UnaryFunctionExpression {
@@ -68,6 +74,8 @@ public:
 
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
+
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
 
 };
 
@@ -80,6 +88,8 @@ public:
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
 
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
+
 };
 
 class CosExpression : public UnaryFunctionExpression {
@@ -90,6 +100,8 @@ public:
 
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
+
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
 
 };
 
@@ -102,6 +114,8 @@ public:
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
 
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
+
 };
 
 class AsinExpression : public UnaryFunctionExpression {
@@ -112,6 +126,8 @@ public:
 
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
+
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
 
 };
 
@@ -124,6 +140,8 @@ public:
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
 
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
+
 };
 
 class AtanExpression : public UnaryFunctionExpression {
@@ -134,6 +152,8 @@ public:
 
   ADFloat eval(values_ptr<ADFloat>& values) const override;
   ADObject eval(values_ptr<ADObject>& values) const override;
+
+  std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override;
 
 };
 
