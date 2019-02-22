@@ -23,6 +23,7 @@ limitations under the License.
 #include "problem/variable_view.h"
 #include "problem/relaxed_problem.h"
 
+
 namespace galini {
 
 namespace problem {

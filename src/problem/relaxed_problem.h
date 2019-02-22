@@ -30,34 +30,13 @@ public:
 
   RelaxedProblem(const Problem::ptr& parent, const std::string &name);
 
-  std::shared_ptr<Constraint> add_constraint(const std::string& name,
-					     const std::shared_ptr<Expression>& expr,
-					     py::object lower_bound,
-					     py::object upper_bound) override;
-
-  std::shared_ptr<Objective> add_objective(const std::string& name,
-					   const std::shared_ptr<Expression>& expr,
-					   py::object sense) override;
-
   Problem::ptr parent() {
     return parent_;
   }
 
-  void duplicate_variables_from_problem(const std::shared_ptr<Problem>& other) override;
-  //  std::vector<std::shared_ptr<Expression>> collect_vertices(const std::shared_ptr<Expression>& root_expr) override;
 private:
   std::shared_ptr<Expression> duplicate_tree(const std::shared_ptr<Expression>& expr);
-
-  void add_to_memo(const std::shared_ptr<Expression>& expr,
-		   const std::shared_ptr<Expression>& new_expr);
-  bool has_memo(const std::shared_ptr<Expression>& expr);
-  std::shared_ptr<Expression> get_memo(const std::shared_ptr<Expression>& expr);
-
   Problem::ptr parent_;
-
-  // Keep track of expressions from original problem already inserted
-  // to maintain the DAG.
-  std::unordered_map<index_t, Expression::ptr> memo_;
 };
 
 
