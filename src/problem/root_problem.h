@@ -27,6 +27,8 @@ class Constraint;
 class Objective;
 class ChildProblem;
 class RelaxedProblem;
+class ExpressionTransformation;
+
 
 class RootProblem : public Problem {
 public:
@@ -69,7 +71,8 @@ public:
   VariableView variable_view(index_t idx) override;
 
   std::shared_ptr<ChildProblem> make_child();
-  std::shared_ptr<RelaxedProblem> make_relaxed(const std::string& name);
+  std::shared_ptr<RelaxedProblem> make_relaxed(const std::string& name,
+					       const std::shared_ptr<ExpressionTransformation>& transformation);
 
   std::vector<std::shared_ptr<Expression>>& vertices() override {
     return vertices_;
@@ -108,8 +111,6 @@ protected:
   virtual std::shared_ptr<Objective> do_add_objective(const std::string& name,
 						      const std::shared_ptr<Expression>& expr,
 						      py::object sense);
-
-  virtual std::vector<std::shared_ptr<Expression>> collect_vertices(const std::shared_ptr<Expression>& root_expr);
 
 private:
   std::string name_;

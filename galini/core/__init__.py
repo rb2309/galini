@@ -23,7 +23,7 @@ __all__ = [
     'LinearExpression', 'UnaryFunctionExpression', 'NegationExpression', 'AbsExpression',
     'SqrtExpression', 'ExpExpression', 'LogExpression', 'SinExpression', 'CosExpression',
     'TanExpression', 'AsinExpression', 'AcosExpression', 'AtanExpression', 'QuadraticExpression',
-    'Reference', 'BilinearTermReference', 'ExpressionReference',
+    'Reference', 'BilinearTermReference', 'ExpressionReference', 'ExpressionTransformation',
     'RootProblem', 'ChildProblem', 'RelaxedProblem', 'VariableView',
     'ipopt_solve', 'IpoptSolution', 'IpoptApplication', 'PythonJournal',
 ]
@@ -81,6 +81,8 @@ from galini_core import (
     RootProblem,
     ChildProblem,
     RelaxedProblem,
+
+    ExpressionTransformation,
 
     ipopt_solve,
     IpoptSolution,

@@ -30,7 +30,7 @@ namespace expression {
 #define DUPLICATE_FUNCTION_IMPL(class) \
   std::shared_ptr<Expression> \
   class::duplicate(const std::vector<typename Expression::ptr>& children) const \
-  { assert(children.size() == 1); return std::make_shared<class>(problem(), children); }
+  { assert(children.size() == 1); return std::make_shared<class>(children); }
 
 EVAL_UNARY_FUNCTION_IMPL(AbsExpression, ad::abs)
 EVAL_UNARY_FUNCTION_IMPL(SqrtExpression, ad::sqrt)

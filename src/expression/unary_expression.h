@@ -70,7 +70,7 @@ public:
 
   std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override {
     assert(children.size() == 1);
-    return std::make_shared<NegationExpression>(problem(), children);
+    return std::make_shared<NegationExpression>(children);
   }
 };
 

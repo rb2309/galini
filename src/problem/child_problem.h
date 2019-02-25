@@ -28,6 +28,8 @@ namespace problem {
 
 class VariableView;
 class RelaxedProblem;
+class ExpressionTransformation;
+
 
 class ChildProblem : public Problem {
 public:
@@ -111,7 +113,8 @@ public:
     return std::make_shared<ChildProblem>(this->self());
   }
 
-  std::shared_ptr<RelaxedProblem> make_relaxed(const std::string& name);
+  std::shared_ptr<RelaxedProblem> make_relaxed(const std::string& name,
+					       const std::shared_ptr<ExpressionTransformation>& transformation);
 
   ~ChildProblem() = default;
 private:

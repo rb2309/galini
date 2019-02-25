@@ -40,7 +40,7 @@ ADObject SumExpression::eval(values_ptr<ADObject>& values) const {
 
 std::shared_ptr<Expression> SumExpression::duplicate(const std::vector<typename Expression::ptr>& children) const {
   assert(children.size() == num_children_);
-  return std::make_shared<SumExpression>(problem(), children);
+  return std::make_shared<SumExpression>(children);
 }
 
 
@@ -104,7 +104,7 @@ std::shared_ptr<Expression> LinearExpression::duplicate(const std::vector<typena
     auto coeff = coefficients_.at(child->uid());
     coefficients[i] = coeff;
   }
-  return std::make_shared<LinearExpression>(problem(), children, coefficients, constant_);
+  return std::make_shared<LinearExpression>(children, coefficients, constant_);
 }
 
 QuadraticExpression::QuadraticExpression(const std::shared_ptr<Problem>& problem,
@@ -224,7 +224,7 @@ std::shared_ptr<Expression> QuadraticExpression::duplicate(const std::vector<typ
     i += 1;
   }
 
-  return std::make_shared<QuadraticExpression>(problem(), vars1, vars2, coefficients);
+  return std::make_shared<QuadraticExpression>(vars1, vars2, coefficients);
 }
 
 } // namespace expression

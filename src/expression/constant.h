@@ -64,7 +64,7 @@ public:
 
 std::shared_ptr<Expression> duplicate(const std::vector<typename Expression::ptr>& children) const override {
   assert(children.size() == 0);
-  return std::make_shared<Constant>(problem(), value_);
+  return std::make_shared<Constant>(value_);
 }
 
 private:

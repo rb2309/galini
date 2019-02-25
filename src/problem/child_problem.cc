@@ -40,8 +40,9 @@ VariableView ChildProblem::variable_view(index_t idx) {
   return variable_view(var);
 }
 
-std::shared_ptr<RelaxedProblem> ChildProblem::make_relaxed(const std::string& name) {
-  auto relaxed = std::make_shared<RelaxedProblem>(this->self(), name);
+std::shared_ptr<RelaxedProblem> ChildProblem::make_relaxed(const std::string& name,
+							   const std::shared_ptr<ExpressionTransformation>& transformation) {
+  auto relaxed = std::make_shared<RelaxedProblem>(this->self(), name, transformation);
 
   // Copy all variables to relaxed problem to keep variables indexes the same
   for (index_t i = 0; i < num_variables_; ++i) {

@@ -87,7 +87,7 @@ void init_module(py::module& m) {
     .def("make_relaxed", &ChildProblem::make_relaxed);
 
   py::class_<RelaxedProblem, RootProblem, RelaxedProblem::ptr>(m, "RelaxedProblem")
-    .def(py::init<const Problem::ptr&, const std::string&>())
+    .def(py::init<const Problem::ptr&, const std::string&, const std::shared_ptr<ExpressionTransformation>&>())
     .def_property_readonly("parent", &RelaxedProblem::parent);
 
   py::class_<VariableView>(m, "VariableView")
@@ -131,6 +131,10 @@ void init_module(py::module& m) {
     .def_property_readonly("root_expr", &Objective::root_expr)
     .def_property_readonly("sense", &Objective::sense)
     .def_property_readonly("uid", &Objective::uid);
+
+  py::class_<ExpressionTransformation, PyExpressionTransformation, ExpressionTransformation::ptr>(m, "ExpressionTransformation")
+    .def(py::init<>())
+    .def("transform", &ExpressionTransformation::transform);
 }
 
 } // namespace problem

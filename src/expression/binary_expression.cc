@@ -39,7 +39,7 @@ ADObject PowExpression::eval(values_ptr<ADObject>& values) const {
 #define BINARY_EXPRESSION_DUPLICATE_IMPL(class) \
   std::shared_ptr<Expression>						\
   class::duplicate(const std::vector<typename Expression::ptr>& children) const \
-  { assert(children.size() == 2); return std::make_shared<class>(problem(), children); }
+  { assert(children.size() == 2); return std::make_shared<class>(children); }
 
 BINARY_EXPRESSION_DUPLICATE_IMPL(ProductExpression)
 BINARY_EXPRESSION_DUPLICATE_IMPL(DivisionExpression)

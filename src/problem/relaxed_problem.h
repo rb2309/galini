@@ -24,19 +24,58 @@ namespace galini {
 
 namespace problem {
 
+
+// Interface for expression transformation.
+class ExpressionTransformation {
+public:
+  using ptr = std::shared_ptr<ExpressionTransformation>;
+  ExpressionTransformation();
+  virtual ~ExpressionTransformation() = default;
+
+  virtual std::shared_ptr<Expression> transform(const std::shared_ptr<Expression>& expr) const = 0;
+  std::shared_ptr<Expression> do_transform(const std::shared_ptr<Expression>& expr) const;
+
+private:
+  std::unordered_map<index_t, Expression::ptr> existing_to_new_expr_;
+};
+
+// Trampoline class
+// https://pybind11.readthedocs.io/en/stable/advanced/classes.html#overriding-virtual-functions-in-python
+class PyExpressionTransformation : public ExpressionTransformation {
+public:
+  std::shared_ptr<Expression> transform(const std::shared_ptr<Expression>& expr) const override {
+    PYBIND11_OVERLOAD_PURE(std::shared_ptr<Expression>,
+			   ExpressionTransformation,
+			   transform,
+			   expr);
+  }
+};
+
+
 class RelaxedProblem : public RootProblem {
 public:
   using ptr = std::shared_ptr<RelaxedProblem>;
 
-  RelaxedProblem(const Problem::ptr& parent, const std::string &name);
+  RelaxedProblem(const Problem::ptr& parent, const std::string &name, const std::shared_ptr<ExpressionTransformation>& transformation);
+
+  std::shared_ptr<Constraint> add_constraint(const std::string& name,
+					     const std::shared_ptr<Expression>& expr,
+					     py::object lower_bound,
+					     py::object upper_bound) override;
+
+  std::shared_ptr<Objective> add_objective(const std::string& name,
+					   const std::shared_ptr<Expression>& expr,
+					   py::object sense) override;
 
   Problem::ptr parent() {
     return parent_;
   }
 
 private:
-  std::shared_ptr<Expression> duplicate_tree(const std::shared_ptr<Expression>& expr);
+  void check_vertices_belong_to_parent(const std::shared_ptr<Expression>& expr);
+
   Problem::ptr parent_;
+  std::shared_ptr<ExpressionTransformation> transformation_;
 };
 
 

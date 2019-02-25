@@ -14,6 +14,7 @@ limitations under the License.
 ======================================================================== */
 #include "root_problem.h"
 
+#include <algorithm>
 #include <queue>
 
 #include "ad/expression_tree_data.h"
@@ -118,6 +119,8 @@ std::shared_ptr<Objective> RootProblem::add_objective(const std::string& name,
   return do_add_objective(name, expr, sense);
 }
 
+  #include <iostream>
+
 void RootProblem::insert_tree(const std::shared_ptr<Expression>& root_expr) {
   std::queue<std::shared_ptr<Expression>> stack;
   std::vector<std::shared_ptr<Expression>> expressions;
@@ -125,11 +128,13 @@ void RootProblem::insert_tree(const std::shared_ptr<Expression>& root_expr) {
   // Do BFS visit on graph, accumulating expressions. Then insert them in problem.
   // This is required to correctly update nodes depth.
   stack.push(root_expr);
+  std::cout << "Inserting tree" << std::endl;
   while (stack.size() > 0) {
     auto current_expr = stack.front();
     stack.pop();
     // avoid double insertion of vertices
     auto expr_problem = current_expr->problem();
+    std::cout << "  Expr = " << current_expr->uid() << "  p = " << expr_problem << std::endl;
     if ((expr_problem != nullptr) && (expr_problem.get() != this)) {
       throw std::runtime_error("Cannot insert vertex in multiple problems");
     }
@@ -181,8 +186,9 @@ std::shared_ptr<ChildProblem> RootProblem::make_child() {
   return std::make_shared<ChildProblem>(this->self());
 }
 
-std::shared_ptr<RelaxedProblem> RootProblem::make_relaxed(const std::string& name) {
-  auto relaxed = std::make_shared<RelaxedProblem>(this->self(), name);
+std::shared_ptr<RelaxedProblem> RootProblem::make_relaxed(const std::string& name,
+							  const std::shared_ptr<ExpressionTransformation>& transformation) {
+  auto relaxed = std::make_shared<RelaxedProblem>(this->self(), name, transformation);
   relaxed->duplicate_variables_from_problem(this->self());
   return relaxed;
 }
@@ -253,30 +259,6 @@ std::shared_ptr<Objective> RootProblem::do_add_objective(const std::string& name
   return objective;
 }
 
-std::vector<std::shared_ptr<Expression>> RootProblem::collect_vertices(const std::shared_ptr<Expression>& root_expr) {
-  std::queue<std::shared_ptr<Expression>> stack;
-  std::vector<std::shared_ptr<Expression>> expressions;
-  std::set<index_t> seen;
-
-  // Do BFS visit on graph, accumulating expressions.
-  stack.push(root_expr);
-
-  while (stack.size() > 0) {
-    auto current_expr = stack.front();
-    stack.pop();
-    auto already_visited = seen.find(current_expr->uid()) != seen.end();
-    if (!already_visited) {
-      expressions.push_back(current_expr);
-
-      for (index_t i = 0; i < current_expr->num_children(); ++i) {
-	seen.insert(current_expr->uid());
-	stack.push(current_expr->nth_children(i));
-      }
-    }
-  }
-
-  return expressions;
-}
 
 } // namespace problem
 
