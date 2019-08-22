@@ -31,5 +31,6 @@ _manager = LogManager()
 def get_logger(name):
     return _manager.get_logger(name)
 
+
 def apply_config(config):
     _manager.apply_config(config)

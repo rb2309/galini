@@ -1,4 +1,4 @@
-# Copyright 2018 Francesco Ceccon
+# Copyright 2019 Francesco Ceccon
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Galini Branch & Bound module."""
+"""Branch & Cut cut loop termination."""
 
-__all__ = [
-    'BabTree', 'Node', 'BranchingStrategy', 'KSectionBranchingStrategy',
-    'NodeSelectionstrategy', 'BestLowerBoundSelectionStrategy',
-]
 
-from .tree import BabTree
-from .node import Node, NodeSolution
-from .strategy import BranchingStrategy, KSectionBranchingStrategy
-from .selection import BestLowerBoundSelectionStrategy
+def cut_loop_should_terminate(state, condition):
+    return state.round > condition.maxiter

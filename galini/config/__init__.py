@@ -18,7 +18,7 @@ __all__ = [
     'GaliniConfig', 'ConfigurationManager', 'CutsGeneratorOptions',
     'SolverOptions', 'NumericOption', 'IntegerOption', 'BoolOption',
     'StringListOption', 'StringOption', 'ExternalSolverOptions',
-    'EnumOption',
+    'EnumOption', 'OptionsGroup'
 ]
 
 from .configuration import GaliniConfig

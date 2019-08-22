@@ -3,9 +3,9 @@ import pytest
 import pyomo.environ as aml
 import numpy as np
 from tests.unit.bab.conftest import MockSelectionStrategy, create_solution
-from galini.pyomo import dag_from_pyomo_model
+from galini.pyomo import problem_from_pyomo_model
 from galini.bab.node import Node, NodeSolution
-from galini.bab.strategy import  KSectionBranchingStrategy
+from galini.bab.strategy import KSectionBranchingStrategy
 from galini.bab.tree import BabTree
 
 
@@ -14,7 +14,7 @@ def create_problem():
     m.I = range(5)
     m.x = aml.Var(m.I, bounds=(-1, 2))
     m.obj = aml.Objective(expr=sum(m.x[i] for i in m.I))
-    return dag_from_pyomo_model(m)
+    return problem_from_pyomo_model(m)
 
 
 @pytest.fixture()
@@ -49,15 +49,17 @@ def tree():
      5 : [0, 2, 1]
 
     """
-    t = BabTree(create_problem(), KSectionBranchingStrategy(), MockSelectionStrategy())
+    problem = create_problem()
+    t = BabTree(problem, KSectionBranchingStrategy(), MockSelectionStrategy())
     t.update_root(create_solution(-30.0, 0.0))
     root = t.root
+    v = problem.variable(0)
     for _ in range(3):
-        root.add_children()
+        root.add_child(v, None)
 
     c = root.children[2]
     for _ in range(2):
-        c.add_children()
+        c.add_child(v, None)
 
     return t
 

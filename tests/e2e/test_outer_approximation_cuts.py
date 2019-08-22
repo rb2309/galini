@@ -19,7 +19,7 @@ import numpy as np
 import pytest
 
 from galini.galini import Galini
-from galini.bab.solver import BranchAndBoundSolver
+from galini.branch_and_cut.solver import BranchAndCutSolver
 from galini.math import is_close
 from galini.pyomo import read_pyomo_model, problem_from_pyomo_model
 
@@ -43,10 +43,13 @@ def test_ipopt_solver(model_name):
         'logging': {
             'stdout': True,
         },
-        'bab': {
+        'bac': {
             'tolerance': atol,
             'relative_tolerance': rtol,
             'root_node_feasible_solution_search_timelimit': 0,
+            'branch_and_cut': {
+                'use_milp_relaxation': True,
+            }
         },
         'cuts_generator': {
             'generators': ['outer_approximation'],
@@ -57,7 +60,7 @@ def test_ipopt_solver(model_name):
             },
         },
     })
-    solver = BranchAndBoundSolver(galini)
+    solver = BranchAndCutSolver(galini)
     solution = solver.solve(problem)
 
     assert solution.status.is_success()

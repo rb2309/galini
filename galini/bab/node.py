@@ -11,16 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 """Branch & Bound node."""
+
 import numpy as np
 from collections import namedtuple
 from galini.core import VariableView
+from galini.bab.branching import branch_at_point
 
 
-NodeState = namedtuple('NodeState', ['lower_bound_solution', 'upper_bound_solution'])
+NodeState = namedtuple(
+    'NodeState',
+    ['lower_bound_solution', 'upper_bound_solution'],
+)
 
 
-class NodeSolution(object):
+class NodeSolution:
     def __init__(self, lower_bound_solution, upper_bound_solution):
         self.lower_bound_solution = lower_bound_solution
         self.upper_bound_solution = upper_bound_solution
@@ -44,7 +50,7 @@ class NodeSolution(object):
         return solution.objective_value()
 
 
-class BranchingPoint(object):
+class BranchingPoint:
     def __init__(self, variable, points):
         self.variable = variable
         if not isinstance(points, list):
@@ -57,9 +63,9 @@ class BranchingPoint(object):
         )
 
 
-class Node(object):
-    def __init__(self, problem, tree=None, parent=None,
-                 coordinate=None, variable=None, solution=None):
+class Node:
+    def __init__(self, problem, tree=None, parent=None, coordinate=None,
+                 variable=None, solution=None):
         self.children = None
         self.problem = problem
         self.tree = tree
@@ -118,11 +124,14 @@ class Node(object):
 
         if strategy is None:
             if self.tree is None:
-                raise RuntimeError('Trying to branch without associated strategy.')
+                raise RuntimeError(
+                    'Trying to branch without associated strategy.'
+                )
             strategy = self.tree.branching_strategy
 
         lower_bound_solution = self.state.lower_bound_solution
-        if lower_bound_solution is None or not lower_bound_solution.status.is_success():
+        if (lower_bound_solution is None or
+                not lower_bound_solution.status.is_success()):
             return None, None
 
         branching_point = strategy.branch(self, self.tree)
@@ -132,28 +141,15 @@ class Node(object):
         return self.children, branching_point
 
     def branch_at_point(self, branching_point):
+        children = branch_at_point(self.problem, branching_point)
         branching_var = branching_point.variable
         if isinstance(branching_var, VariableView):
             branching_var = branching_var.variable
-        var = self.problem.variable_view(branching_var.idx)
-        for point in branching_point.points:
-            if point < var.lower_bound() or point > var.upper_bound():
-                raise RuntimeError('Branching outside variable bounds')
-        new_upper_bound = var.lower_bound()
-        for point in branching_point.points:
-            new_lower_bound = new_upper_bound
-            new_upper_bound = point
-            self._add_children_branched_at(branching_var, new_lower_bound, new_upper_bound)
-        self._add_children_branched_at(branching_var, new_upper_bound, var.upper_bound())
 
-    def _add_children_branched_at(self, branching_var, new_lower_bound, new_upper_bound):
-        child_problem = self.add_children(branching_var)
-        var = child_problem.variable_view(branching_var.idx)
-        var.set_lower_bound(new_lower_bound)
-        var.set_upper_bound(new_upper_bound)
+        for child in children:
+            self.add_child(child, branching_var)
 
-    def add_children(self, branching_var=None):
-        child = self.problem.make_child()
+    def add_child(self, child, branching_var):
         if self.coordinate is not None:
             num_children = 0 if self.children is None else len(self.children)
             coordinate = self.coordinate.copy()

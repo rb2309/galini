@@ -19,7 +19,10 @@ from galini.bab.node import Node, NodeSolution
 from galini.solvers.solution import SolutionPool
 
 
-TreeState = namedtuple('TreeState', ['lower_bound', 'upper_bound', 'nodes_visited'])
+TreeState = namedtuple(
+    'TreeState',
+    ['lower_bound', 'upper_bound', 'nodes_visited']
+)
 
 
 class BabTree:
@@ -27,7 +30,11 @@ class BabTree:
         self.root = Node(problem, tree=self, coordinate=[0])
         self.branching_strategy = branching_strategy
         self.selection_strategy = selection_strategy
-        self.state = TreeState(lower_bound=-np.inf, upper_bound=np.inf, nodes_visited=0)
+        self.state = TreeState(
+            lower_bound=-np.inf,
+            upper_bound=np.inf,
+            nodes_visited=0,
+        )
         self.open_nodes = {}
         self.phatomed_nodes = []
         self.solution_pool = SolutionPool(5)
