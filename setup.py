@@ -141,7 +141,9 @@ setup(
             'default=galini.branch_and_cut.primal:DefaultPrimalSearchStrategy',
         ],
         'galini.cuts_generators': [
-            'outer_approximation=galini.outer_approximation:OuterApproximationCutsGenerator'
+            'outer_approximation=galini.outer_approximation:OuterApproximationCutsGenerator',
+            'triangle=galini.triangle:TriangleCutsGenerator',
+            'bilinear=galini.bilinear_cuts_generator:BilinearCutsGenerator',
         ],
     },
     cmdclass={
